@@ -3,64 +3,57 @@ package pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.Selenide.$;
-import static core.ConfigTests.*;
+import static com.codeborne.selenide.Selenide.$$;
+import static core.ConfigTests.BASE_URL;
 
 public class Cart {
     public void open() {
-        Selenide.open(BASE_URL + CART_PAGE_URL);
+        Selenide.open(BASE_URL + "/cart/");
     }
 
     public void checkoutWithoutRegistration() {
-        $(By.id("goto-checkout")).click();
-        $(By.linkText("Buy without registration")).click();
-        nextStepButtonClick();
+        buttonClick("Proceed to Checkout");
+        buttonClick("Buy without registration");
+        buttonClick("Next step");
         fillContactCorm();
-        nextStepButtonClick();
+        buttonClick("Next step");
+        selectItem(1);
+        buttonClick("Next step");
+        buttonClick("Next step");
+        selectItem(1);
+        buttonClick("Next");
+        buttonClick("Submit order");
+    }
 
+    private void buttonClick(String text) {
+        $(By.linkText(text)).shouldBe(Condition.enabled).click();
+    }
+
+    private void selectItem(int index) {
+        $$(By.cssSelector(".styled-checkbox")).get(index).click();
     }
 
     private void fillContactCorm() {
-        $(By.name("address[firstName]")).val(FIRST_NAME);
-        $(By.name("address[lastName]")).val(LAST_NAME);
-        $(By.name("address[middleName]")).val(MIDDLE_NAME);
-        $(By.name("address[email]")).val(EMAIL);
-        $(By.name("address[address]")).val(ADRESS);
-        $(By.cssSelector(".styled-phone-edit .hide-outline")).val(CONTACT_PHONE);
-
-
-      //  $(By.cssSelector(".chosen-container-active")).click();
-//        $(By.id("state_id_chosen")).click();
-//        $(By.cssSelector(".chosen-container-active")).val(REGION).sendKeys(Keys.ENTER);
-//        SelenideElement select = $(By.id("state_id"));
-//        select.selectOptionByValue(REGION);
-
- //       $(By.id("state_id_chosen")).find(By.cssSelector(".select-shade")).click();
- //       $(By.id("state_id_chosen")).find(By.cssSelector(".select-shade")).selectOption(REGION);
- //       $(By.id("state_id_chosen")).find(By.cssSelector(".select-shade")).selectOptionByValue(REGION);
-
-
-//        $(By.id("city_id_chosen")).find(By.cssSelector(".select-shade")).selectOptionByValue(CITY);
-
- //       $(By.id("state_id_chosen")).find(By.tagName("em")).val(REGION);
-//        $(By.id("state_id_chosen")).val(REGION);
-//        $(By.id("city_id_chosen")).find(By.cssSelector(".select-shade")).val(CITY);
-
- //       selectItem($(By.id("state_id")), REGION);
-//        selectItem($(By.id("city_id_chosen")).findElementByCssSelector(".select-shade"),CITY);
-
+        $(By.name("address[firstName]")).val("testRoman");
+        $(By.name("address[lastName]")).val("testSR");
+        $(By.name("address[middleName]")).val("testVladimirovish");
+        $(By.name("address[email]")).val("test@test.com");
+        $(By.name("address[address]")).val("testZhukovskogo ave 5");
+        $(By.cssSelector(".styled-phone-edit .hide-outline")).val("111111111");
+        $(By.name("address[zip]")).val("61070");
+        selectDropDown("state_id_chosen", "Harkovskaya oblast");
+        selectDropDown("city_id_chosen", "Izyum");
     }
 
-    private void nextStepButtonClick() {
-        $(By.linkText("Next step")).shouldBe(Condition.present).click();
+    private void selectDropDown(String cssSelector, String value) {
+        $(By.id(cssSelector)).click();
+        $(By.cssSelector(".chosen-container-active .chosen-drop .chosen-search input")).sendKeys(value + Keys.ENTER);
     }
 
-    public void selectItem(WebElement elem, String value) {
-        WebElement Selectbox_roles = elem;
-        Select select1 = new Select(Selectbox_roles);
-        select1.selectByVisibleText(value);
+    public void shoudBeSuccess() {
+        $(By.cssSelector(".inline-block")).shouldHave(Condition.text("Order details"));
     }
 }

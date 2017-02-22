@@ -1,26 +1,25 @@
 import org.junit.Test;
 import pages.Cart;
+import pages.MainPage;
 import pages.Product;
 
 public class GsmServerTest extends BaseTest {
 
-    Product product = new Product();
-    Cart cart = new Cart();
+    private Product product = new Product();
+    private Cart cart = new Cart();
+    private MainPage main = new MainPage();
 
     @Test
     public void testAddToCardProductAndPurchaseWithoutRegistration() {
-
-        product.open();
+        main.open();
+        main.firstProductClick();
         product.addToCart();
+
         product.shouldBeAdded();
 
         cart.open();
         cart.checkoutWithoutRegistration();
 
-
-
-
-
+        cart.shoudBeSuccess();
     }
-
 }

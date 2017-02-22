@@ -5,6 +5,8 @@ import org.junit.BeforeClass;
 
 import java.io.IOException;
 
+import static com.codeborne.selenide.Selenide.close;
+
 public class BaseTest {
 
     public static ConfigTests configTests;
@@ -19,7 +21,7 @@ public class BaseTest {
 
     @After
     public void closeDriver() {
-   //     close();
+        close();
     }
 
 }
